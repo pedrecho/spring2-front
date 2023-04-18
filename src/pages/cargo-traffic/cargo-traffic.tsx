@@ -3,6 +3,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {Bar} from "react-chartjs-2";
 import {BarElement, CategoryScale, Chart, Legend, LinearScale, Title, Tooltip} from "chart.js";
+import {CreateCargo} from "./create-cargo";
 
 
 export interface Cargo {
@@ -25,6 +26,7 @@ export function CargoTraffic() {
 
     const [search, setSearch] = React.useState('')
     const [gist, setGist] = React.useState<any>([])
+    const [isModal, setIsModal] = React.useState(false)
 
     const [isModalVisible, setModalVisible] = React.useState(true);
     // const [disabled, setDisabled] = React.useState(false);
@@ -37,7 +39,7 @@ export function CargoTraffic() {
     const [checkedDateTo, setCheckedDateTo] = React.useState(true);
 
 
-    React.useEffect(() => {
+    const loadCargo = () => {
         const promise = axios({
             method: 'get',
             url: 'http://localhost:8080/cargo',
@@ -47,6 +49,12 @@ export function CargoTraffic() {
             setCargos(res.data)
             setInitialCargos(res.data)
         }).catch((e) => redirect('/auth'))
+        setIsModal(false)
+    }
+
+
+    React.useEffect(() => {
+        loadCargo()
     }, [])
 
     const sort = (value: string) => {
@@ -140,11 +148,14 @@ export function CargoTraffic() {
 
     return (
         <div className={'mt-4 ml-4 flex flex-col'}>
+            {isModal &&
+                <CreateCargo callback={loadCargo}/>
+            }
             <div className={'flex flex-row items-center'}>
                 {
                     ((localStorage.getItem('decoded')?.includes('MANAGER'))) &&
                         <button className={'border-2 box-border p-[10px] w-[150px]'}
-                                onClick={() => redirect('/create-cargo')}>Создать груз
+                                onClick={() => setIsModal(true)}>Создать груз
                         </button>
                 }
                 <input value={search} onChange={(e) => setSearch(e.target.value)}

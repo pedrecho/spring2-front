@@ -3,7 +3,7 @@ import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
 import {Cargo} from "./cargo-traffic";
 
-export function CreateCargo(){
+export function CreateCargo(props){
     const [cargos, setCargos] = React.useState<Cargo>({
         id: 0,
         name: '',
@@ -32,23 +32,26 @@ export function CreateCargo(){
             } else if (reason.response!.status === 403) {
                 redirect('/cargo-traffic')
             }})
+        props.callback()
     }
 
     return(
-        <div className={'ml-4 mt-4 flex flex-col w-[200px] h-[300px]'}>
+        <div className={'ml-4 mt-4 flex flex-col w-[200px] h-[300px] fixed bg-gray-200'}>
             <label>Название:</label>
             <input  placeholder={"Тумбочка"} className={'border-2 rounded-md'} value={cargos.name} onChange={(e) => setCargos({...cargos, name: e.target.value})}/><br/>
             <label>Содержимое:</label>
             <input  placeholder={"Четыре угла"} className={'border-2 rounded-md'} value={cargos.content} onChange={(e) => setCargos({...cargos, content: e.target.value})}/><br/>
             <label>Город отправки:</label>
             <input placeholder={"Пенза"} className={'border-2 rounded-md'} value={cargos.cityFrom} onChange={(e) => setCargos({...cargos, cityFrom: e.target.value})}/><br/>
-            <label>Город прибытия:</label>
-            <input placeholder={"Москва"} className={'border-2 rounded-md'} value={cargos.cityTo} onChange={(e) => setCargos({...cargos, cityTo: e.target.value})}/><br/>
-            <label>Дата отправки:</label>
-            <input placeholder={"2022-04-15"} className={'border-2 rounded-md'} value={cargos.dateFrom} onChange={(e) => setCargos({...cargos, dateFrom: e.target.value})}/><br/>
-            <label>Дата прибытия:</label>
-            <input  placeholder={"2023-04-15"} className={'border-2 rounded-md'} value={cargos.dateTo} onChange={(e) => setCargos({...cargos, dateTo: e.target.value})}/><br/>
-            <button onClick={addCargo}>Добавить груз</button><br/>
+            <div className={'bg-gray-200'}>
+                <label>Город прибытия:</label>
+                <input placeholder={"Москва"} className={'border-2 rounded-md'} value={cargos.cityTo} onChange={(e) => setCargos({...cargos, cityTo: e.target.value})}/><br/>
+                <label>Дата отправки:</label>
+                <input placeholder={"2022-04-15"} className={'border-2 rounded-md'} value={cargos.dateFrom} onChange={(e) => setCargos({...cargos, dateFrom: e.target.value})}/><br/>
+                <label>Дата прибытия:</label>
+                <input  placeholder={"2023-04-15"} className={'border-2 rounded-md'} value={cargos.dateTo} onChange={(e) => setCargos({...cargos, dateTo: e.target.value})}/><br/>
+                <button onClick={addCargo}>Добавить груз</button><br/>
+            </div>
         </div>
     )
 }
